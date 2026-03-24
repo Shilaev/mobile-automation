@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'ru.shilaev'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'io.appium:java-client:10.1.0' // Appium
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.21.2' // JSON
+    implementation 'io.github.cdimascio:dotenv-java:3.2.0' // Dotenv
+
+    // Логирование
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+    implementation 'org.slf4j:slf4j-simple:2.0.17'
+
+    // JUnit 5 для аннотаций в основном коде
+    implementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+
+    // JUnit 5 для тестов
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+
+    // Пробрасываем параметры в тесты
+    systemProperties = System.getProperties() as Map<String, ?>
+}
+
+application {
+    mainClass = 'ru.shilaev.automation.Main'
+
+    // Собираем все переданные -D параметры
+    def jvmArgs = []
+    System.getProperties().each { key, value ->
+        if (key.toString().startsWith("env") ||
+                key.toString().startsWith("device")
+        ) {
+            jvmArgs.add("-D${key}=${value}")
+        }
+    }
+    applicationDefaultJvmArgs = jvmArgs
+}
