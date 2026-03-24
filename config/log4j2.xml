@@ -2,22 +2,20 @@
 <Configuration status="ERROR" monitorInterval="30">
 
     <Properties>
-        <!-- Переменные для удобства -->
         <Property name="log-path">logs</Property>
-        <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+        <Property name="pattern-layout">%d{HH:mm:ss} [%t] %highlight{%-5level}{FATAL=red, ERROR=red, WARN=yellow,
+            INFO=white, DEBUG=cyan} %logger{36} - %msg%n</Property>
     </Properties>
 
     <Appenders>
-        <!-- 1. Консоль (цветная) -->
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %highlight{%-5level} %logger{36} - %msg%n"/>
+            <PatternLayout pattern="${pattern-layout}" disableAnsi="false"/>
         </Console>
 
-        <!-- 2. Файл с ротацией (создает новые файлы по размеру) -->
         <RollingFile name="RollingFile"
                      fileName="${log-path}/automation.log"
                      filePattern="${log-path}/automation-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="${pattern}"/>
+            <PatternLayout pattern="${pattern-layout}" disableAnsi="true"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="50 MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
@@ -25,11 +23,10 @@
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
 
-        <!-- 3. Только ошибки (отдельный файл) -->
         <RollingFile name="ErrorFile"
                      fileName="${log-path}/errors.log"
                      filePattern="${log-path}/errors-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="${pattern}"/>
+            <PatternLayout pattern="${pattern-layout}" disableAnsi="true"/>
             <Filters>
                 <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
             </Filters>
@@ -40,19 +37,16 @@
     </Appenders>
 
     <Loggers>
-        <!-- Логи нашего фреймворка -->
         <Logger name="ru.shilaev.automation" level="info" additivity="false">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="RollingFile"/>
             <AppenderRef ref="ErrorFile"/>
         </Logger>
 
-        <!-- Логи Appium (меньше шума) -->
         <Logger name="io.appium" level="warn" additivity="false">
             <AppenderRef ref="RollingFile"/>
         </Logger>
 
-        <!-- Корневой логгер (всё остальное) -->
         <Root level="info">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="RollingFile"/>

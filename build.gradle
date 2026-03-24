@@ -17,7 +17,8 @@ dependencies {
 
     // Логирование
     implementation 'org.slf4j:slf4j-api:2.0.17'
-    implementation 'org.slf4j:slf4j-simple:2.0.17'
+    implementation 'org.apache.logging.log4j:log4j-slf4j2-impl:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
 
     // JUnit 5 для аннотаций в основном коде
     implementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
@@ -41,10 +42,19 @@ application {
     def jvmArgs = []
     System.getProperties().each { key, value ->
         if (key.toString().startsWith("env") ||
-                key.toString().startsWith("device")
+                key.toString().startsWith("device") ||
+                key.toString().startsWith("logs")
         ) {
             jvmArgs.add("-D${key}=${value}")
         }
     }
     applicationDefaultJvmArgs = jvmArgs
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs "config"
+        }
+    }
 }
