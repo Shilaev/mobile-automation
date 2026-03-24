@@ -25,6 +25,11 @@ public class EnvironmentConfig {
         }
     }
 
+    /**
+     * Достает значение из переменных окружения
+     * @param key - имя переменной (например device.name)
+     * @return String - значение переменной
+     */
     public static String get(String key) {
         String value = System.getProperty(key);
         if (value != null) return value;
