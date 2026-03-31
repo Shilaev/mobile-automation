@@ -1,7 +1,7 @@
 {
-  "deviceName": "Emulator_Medium_Phone_API_36",
+  "deviceName": "Pixel",
   "platformName": "Android",
-  "platformVersion": "16.0",
+  "platformVersion": "11.0",
   "udid": "emulator-5554",
   "automationName": "UiAutomator2"
 }

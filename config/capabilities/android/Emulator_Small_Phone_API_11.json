@@ -1,0 +1,7 @@
+{
+  "deviceName": "Small_Phone",
+  "platformName": "Android",
+  "platformVersion": "11.0",
+  "udid": "emulator-5554",
+  "automationName": "UiAutomator2"
+}
